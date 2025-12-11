@@ -1,0 +1,25 @@
+kind : Deployment
+apiVersion : apps/v1
+metadata :
+  name : frontend-deployment
+  namespace : garden
+spec:
+  replicas : 1 
+  selector :
+    matchLabels :
+      app : frontend
+  template :
+    metadata :
+      name : frontend-pod
+      namespace : garden
+      labels :
+        app : frontend
+    spec :
+      containers :
+      - name : frontend-container
+        image : vmadiwalkar/frontend:latest
+      
+        ports :
+        - containerPort : 8080
+        
+        
