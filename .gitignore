@@ -35,3 +35,15 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+.terraform.lock.hcl
+
+
+# ansible
+
+inventory.ini
+ansible.cfg
+terraform-output.txt
+
+*.pem
+
+
