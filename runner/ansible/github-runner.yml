@@ -1,0 +1,69 @@
+- name: Install GitHub Self-Hosted Runner (v2.329.0)
+  hosts: runner
+  become: yes
+
+  vars:
+    github_repo_owner: "GitHub-Owner"
+    github_repo_name: "GitHub-Repository" 
+    github_runner_token: "GitHub_Runner_Token"   # from GitHub Settings → Actions → Runners → New Runner
+    runner_version: "2.329.0"
+    runner_dir: "/opt/actions-runner"
+
+  tasks:
+    - name: Install required dependencies
+      apt:
+        name:
+          - curl
+          #- jq
+          - tar
+        update_cache: yes
+
+    - name: Create runner directory
+      file:
+        path: "{{ runner_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download GitHub Actions Runner v{{ runner_version }}
+      get_url:
+        url: "https://github.com/actions/runner/releases/download/v{{ runner_version }}/actions-runner-linux-x64-{{ runner_version }}.tar.gz"
+        dest: "{{ runner_dir }}/actions-runner.tar.gz"
+        mode: '0644'
+
+    - name: Extract runner package
+      unarchive:
+        src: "{{ runner_dir }}/actions-runner.tar.gz"
+        dest: "{{ runner_dir }}"
+        remote_src: yes
+
+    - name: Change owner of runner directory
+      file:
+        path: "{{ runner_dir }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        recurse: yes
+
+    - name: Configure GitHub runner
+      become: no
+      shell: |
+        cd {{ runner_dir }}
+        ./config.sh \
+          --url https://github.com/{{ github_repo_owner }}/{{ github_repo_name }} \
+          --token {{ github_runner_token }} \
+          --unattended \
+          --labels "ec2,ansible" \
+          --name "ec2-github-runner"
+      args:
+        creates: "{{ runner_dir }}/.runner"
+
+    - name: Install runner as a systemd service
+      shell: |
+        cd {{ runner_dir }}
+        sudo ./svc.sh install
+        sudo ./svc.sh start
+
+    # - name: Enable runner service on startup
+    #   systemd:
+    #     name: actions.runner.{{ github_repo_owner }}-{{ github_repo_name }}.service
+    #     enabled: yes
