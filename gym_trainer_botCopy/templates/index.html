@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gym Trainer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="background-glow"></div>
+    
+    <div class="app-container">
+        <header class="chat-header">
+            <div class="logo">
+                <i class="fa-solid fa-dumbbell"></i>
+                <span>FitBot AI</span>
+            </div>
+            <div class="status-indicator">
+                <span class="dot"></span> Online
+            </div>
+        </header>
+
+        <main class="chat-area" id="chat-area">
+            <!-- Welcome Message -->
+            <div class="message bot-message">
+                <div class="avatar">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="content">
+                    <p>Hello! I'm your personal AI Gym Trainer. I can help with workout plans, form checks (send me a pic!), or diet advice. Let's get moving!</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="input-area">
+            <form id="chat-form">
+                <div class="file-upload-wrapper">
+                    <label for="file-input" class="file-btn">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </label>
+                    <input type="file" id="file-input" name="files" multiple>
+                    <span id="file-count" class="badge hidden">0</span>
+                </div>
+                
+                <input type="text" id="user-input" name="message" placeholder="Ask about workouts, diet, or upload a photo..." autocomplete="off">
+                
+                <button type="submit" class="send-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+            <div id="file-preview-area" class="file-preview-area"></div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
